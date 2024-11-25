@@ -14,8 +14,8 @@ fun AppNavHost(navController: NavHostController) {
         composable(route = Rutas.PrimeraPantalla.ruta) {
             Primera(navController = navController)
         }
-        composable(route = Rutas.SegundaPantalla.ruta) {
-            Segunda(navController = navController)
+        composable(route = "segundaPantalla/{provincia}") {
+            Segunda(navController = navController, provincia = it.arguments?.getString("provincia"))
         }
     }}
 //En el NavHost indico las pantallas que habrá

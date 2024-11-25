@@ -75,7 +75,10 @@ fun Primera(navController: NavController) {
 
             // Botón "Ok"
             Button(
-                onClick = { navController.navigate(Rutas.SegundaPantalla.ruta) },
+                onClick = {
+                    navController.navigate("segundaPantalla/${selectedText}") //Esto es para coger el valor de la provincia seleccionada
+                    //navController.navigate(Rutas.SegundaPantalla.ruta) Valor que tenía antes, sin pasar argumentos
+                    },
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {

@@ -17,7 +17,7 @@ import com.example.quince.navcontroller.Rutas
 
 
 @Composable
-fun Segunda(navController: NavController) {
+fun Segunda(navController: NavController, provincia: String?) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -27,7 +27,7 @@ fun Segunda(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("Segunda pantalla")
+            Text("Provincia seleccionada: ${provincia ?: "No seleccionada"}")
 
             // Botón "Ok"
             Button(
