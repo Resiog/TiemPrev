@@ -41,8 +41,22 @@ android {
 
 dependencies {
     val nav_version = "2.8.0"
+    val retrofit_version = "2.9.0"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    //ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

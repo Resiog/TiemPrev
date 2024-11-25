@@ -21,20 +21,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.quince.mapa.mapeadoProvincias
 import com.example.quince.navcontroller.Rutas
+import com.example.quince.retrofit.ProvinciaViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Primera(navController: NavController) {
+fun Primera(
+    navController: NavController,
+    viewModel: ProvinciaViewModel = viewModel()
+) {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf("") }
     val provincias = listOf(
-        "Alicante", "Valencia", "Castellón", "Madrid",
-        "Barcelona", "Sevilla", "Málaga", "Bilbao",
-        "Zaragoza", "Murcia", "Granada", "Cádiz",
-        "Córdoba", "Valladolid", "Vigo", "Gijón"
+        "A Coruña", "Alicante", "Albacete", "Almería", "Álava", "Asturias", "Ávila", "Badajoz",
+        "Barcelona", "Bizkaia", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ceuta",
+        "Ciudad Real", "Córdoba", "Cuenca", "Gipuzkoa", "Girona", "Granada", "Guadalajara",
+        "Huelva", "Huesca", "Illes Balears", "Jaén", "La Rioja", "Las Palmas", "León", "Lleida",
+        "Lugo", "Madrid", "Málaga", "Melilla", "Murcia", "Navarra", "Ourense", "Palencia",
+        "Pontevedra", "Salamanca", "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria",
+        "Tarragona", "Teruel", "Toledo", "València", "Valladolid", "Zamora", "Zaragoza"
     )
 
     Box(
@@ -76,8 +85,11 @@ fun Primera(navController: NavController) {
             // Botón "Ok"
             Button(
                 onClick = {
-                    navController.navigate("segundaPantalla/${selectedText}") //Esto es para coger el valor de la provincia seleccionada
-                    //navController.navigate(Rutas.SegundaPantalla.ruta) Valor que tenía antes, sin pasar argumentos
+                    //navController.navigate("segundaPantalla/${selectedText}") //Esto es para coger el valor de la provincia seleccionada
+                    val provinciaValue = mapeadoProvincias[selectedText]
+                    if (provinciaValue != null) {
+                        navController.navigate("segundaPantalla/$provinciaValue")
+                    }
                     },
                 modifier = Modifier
                     .padding(bottom = 16.dp)
