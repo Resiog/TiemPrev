@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.quince.extensiones.decodeUnicodeCompletely
 import com.example.quince.extensiones.decodeTildesAVersiAhora
+import com.example.quince.mapa.paresProvCod
 import com.example.quince.model.Provincias
 import com.example.quince.navcontroller.Rutas
 import com.example.quince.retrofit.ProvinciaViewModel
@@ -52,12 +53,40 @@ fun Segunda(
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}")
                     Spacer(modifier = Modifier.height(16.dp))
+
+                    // Debo hacer un mapOf para que funcione el pasarle código de provincia y que me de estado del cielo
+                    val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
+                    it.ciudades?.firstOrNull { ciudad ->
+                        ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
+                    }?.let { ciudad ->
+                        // Acceder a la propiedad stateSky.description solo si se encuentra la ciudad
+                        ciudad.stateSky?.description?.let { estadoCielo ->
+                            Text("Estado del cielo hoy: ${estadoCielo.decodeTildesAVersiAhora()}")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    //Temperaturas
+                    it.ciudades?.firstOrNull { ciudad ->
+                        ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
+                    }?.let { ciudad ->
+                        // Acceder a la propiedad TempInfo, max y min solo si se encuentra la ciudad
+                        ciudad.temperatures?.max?.let { estadoCielo ->
+                            Text("Temperatura máxima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º")
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ciudad.temperatures?.min?.let { estadoCielo ->
+                            Text("Temperatura mínima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+//
+                    //
                     it.today?.p?.let { tiempo ->
-                        Text("Tiempo hoy: ${tiempo.decodeTildesAVersiAhora()}")
+                        Text("Descripción completa del tiempo de hoy: ${tiempo.decodeTildesAVersiAhora()}")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     it.tomorrow?.p?.let { tiempo ->
-                        Text("Tiempo mañana: ${tiempo.decodeTildesAVersiAhora()}")
+                        Text("Descripción del tiempo previsto para mañana: ${tiempo.decodeTildesAVersiAhora()}")
                     }
                 }
             } ?: Text("Cargando...")
