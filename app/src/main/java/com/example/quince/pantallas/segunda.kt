@@ -55,6 +55,7 @@ fun Segunda(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Debo hacer un mapOf para que funcione el pasarle código de provincia y que me de estado del cielo
+                    //Esto me saca el código de la provincia en concreto:
                     val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
                     it.ciudades?.firstOrNull { ciudad ->
                         ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
