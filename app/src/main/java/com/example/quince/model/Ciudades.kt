@@ -8,3 +8,5 @@ data class Ciudades(
     val stateSky: StateInfo? = null,
     val temperatures: TempInfo? = null
 )
+
+//Uso solo las propiedades que necesito

@@ -109,6 +109,7 @@ fun Segunda(
     }
 }
 
+//Estructura inicial:
 @Composable
 fun SegundaA() {
 

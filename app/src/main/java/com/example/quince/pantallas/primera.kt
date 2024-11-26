@@ -100,6 +100,7 @@ fun Primera(
     }
 }
 
+//Estructura inicial
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrimeraA() {
