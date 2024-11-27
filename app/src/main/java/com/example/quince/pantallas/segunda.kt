@@ -25,6 +25,8 @@ import com.example.quince.mapa.paresProvCod
 import com.example.quince.model.Provincias
 import com.example.quince.navcontroller.Rutas
 import com.example.quince.retrofit.ProvinciaViewModel
+import com.example.quince.room.database.AppDatabase.Companion.getDatabase
+import com.example.quince.room.dataclasses.Recomendacion
 
 
 @Composable
@@ -91,6 +93,7 @@ fun Segunda(
                     }
                 }
             } ?: Text("Cargando...")
+
 
             // Botón "Ok"
             Button(

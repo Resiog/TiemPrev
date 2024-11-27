@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quince.model.Provincias
+import com.example.quince.room.database.AppDatabase.Companion.getDatabase
+import com.example.quince.room.dataclasses.Recomendacion
 import kotlinx.coroutines.launch
 
 class ProvinciaViewModel : ViewModel() {

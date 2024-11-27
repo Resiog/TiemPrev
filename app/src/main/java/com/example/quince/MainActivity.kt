@@ -1,6 +1,7 @@
 package com.example.quince
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,13 +27,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.quince.navcontroller.AppNavHost
+import com.example.quince.room.database.AppDatabase
 import com.example.quince.ui.theme.QuinceTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            val users = AppDatabase.getDatabase(applicationContext).daoProvincia().getAll()
+            Log.d("MainActivity", "Users: $users")
+        }
         enableEdgeToEdge()
         setContent {
             QuinceTheme {
