@@ -16,4 +16,8 @@ interface DaoProvincia {
 
     @Query("SELECT * FROM provincia WHERE name = :provinciaName LIMIT 1")
     suspend fun getProvinciaByName(provinciaName: String): Provincia?
+
+    // Función para obtener solo el ID de la provincia por su nombre
+    @Query("SELECT id FROM provincia WHERE name = :provinciaName LIMIT 1")
+    suspend fun getIdByName(provinciaName: String): Int?
 }

@@ -38,6 +38,7 @@ import kotlinx.coroutines.withContext
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import com.example.quince.room.dataclasses.Provincia
+import com.example.quince.room.dataclasses.Tiempo
 
 //Aquí sí se usa viewmodel y debería usar también la base de datos interna.
 
@@ -62,35 +63,58 @@ fun Segunda(
         }
     }
 
-    // El LaunchedEffect solo se ejecutará cuando provinciaData cambie
     LaunchedEffect(provinciaData) {
-        // Verificamos si los datos están disponibles antes de proceder
-        if (provinciaData != null) {
-            val nombreProvincia = provinciaData?.provincia?.NOMBRE_PROVINCIA
-            if (!nombreProvincia.isNullOrEmpty()) {
-                withContext(Dispatchers.IO) {
-                    //Lo de antes del comentario que tenía para verificar que funcionaba era.
-                    val comentario = db.daoRecomendacion().getRandomCommentInRange()
-                    recomendacion = comentario?.consejos?.decodeUnicodeCompletely()
-                    // Creo un objeto Provincia para insertar
-                    val provinciaAVerSiAhora = Provincia(name = nombreProvincia)
+        val nombreProvincia = provinciaData?.provincia?.NOMBRE_PROVINCIA
+        if (!nombreProvincia.isNullOrEmpty()) {
+            withContext(Dispatchers.IO) {
+                //Lo de antes del comentario que tenía para verificar que funcionaba era.
+                val comentario = db.daoRecomendacion().getRandomCommentInRange()
+                recomendacion = comentario?.consejos?.decodeUnicodeCompletely()
+                // Creo un objeto Provincia para insertar
+                val provinciaAVerSiAhora = Provincia(name = nombreProvincia)
 
-                    // Inserto la provincia en la base de datos
-                    try {
-                        db.daoProvincia().insertProvincia(provinciaAVerSiAhora)
-                        Log.d("ProvinciaInsercion", "Provincia insertada correctamente.")
-                    } catch (e: Exception) {
-                        Log.e("ProvinciaInsercion", "Error al insertar la provincia: ${e.message}")
-                    }
+                // Inserto la provincia en la base de datos
+                try {
+                    db.daoProvincia().insertProvincia(provinciaAVerSiAhora)
+                    Log.d("ProvinciaInsercion", "Provincia insertada correctamente.")
+                } catch (e: Exception) {
+                    Log.e("ProvinciaInsercion", "Error al insertar la provincia: ${e.message}")
                 }
-            } else
-            {
-                Log.d("ProvinciaInsercion", "El nombre de la provincia es nulo o vacío.")
+
+                //Meto aquí lo segundo que es el segundo insert
+                val nombre = provinciaData?.provincia?.NOMBRE_PROVINCIA
+                val nombreId = db.daoProvincia().getIdByName(nombre.toString())//Implementar aquí que el Id (como es FK) sea igual al ID de la tabla provincias que ponga
+                val descripcion = provinciaData?.ciudades?.firstOrNull()?.stateSky?.description
+                //val descripcion = provinciaData?.today?.p?.decodeUnicodeCompletely()
+                val maxTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.max
+                val minTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.min
+                val recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRange()
+                val consejo = recomendacionProvincia?.consejos ?: "Sin recomendación"
+                val recomendacionId = recomendacionProvincia?.id //Implementar aquí el obtener el ID de la recomendación
+                // Creo un objeto Tiempo para insertar
+                val tiempoAVer = Tiempo(
+                    provincia = nombre?: "Desconocida",
+                    provinciaId = nombreId?: -1,
+                    descripcion = descripcion!!,
+                    maxTemp = maxTemp!!.toDoubleOrNull() ?: 0.0,
+                    minTemp = minTemp!!.toDoubleOrNull() ?: 0.0,
+                    Recomendado = consejo,
+                    consejoId = recomendacionId!!)
+
+                // Inserto en la tabla tiempo todo
+                try {
+                    db.daoTiempo().insertTiempo(tiempoAVer)
+                    Log.d("Tiempo inserción", "Provincia insertada correctamente.")
+                } catch (e: Exception) {
+                    Log.e("Tiempo inserción", "Error al insertar la provincia: ${e.message}")
+                }
+                //Fin de meter aquí ese segundo
             }
         } else {
-            Log.d("ProvinciaInsercion", "provinciaData aún es nulo")
+            Log.d("ProvinciaInsercion", "El nombre de la provincia es nulo o vacío.")
         }
     }
+
 
 
     Box(
