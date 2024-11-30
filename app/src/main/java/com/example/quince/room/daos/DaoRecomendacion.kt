@@ -11,9 +11,6 @@ interface DaoRecomendacion {
     @Query("SELECT * FROM recomendacion")
     suspend fun getAll(): List<Recomendacion>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecomendacion(recomendacion: Recomendacion)
-
-    @Query("SELECT * FROM recomendacion ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomConsejo(): Recomendacion?
+    @Query("SELECT * FROM recomendacion WHERE id BETWEEN 1 AND 3 ORDER BY RANDOM() LIMIT 1") //El limit 1 es para que solo devuelva un valor
+    fun getRandomCommentInRange(): Recomendacion?
 }

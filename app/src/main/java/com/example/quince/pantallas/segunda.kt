@@ -13,10 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.quince.extensiones.decodeUnicodeCompletely
@@ -25,21 +28,41 @@ import com.example.quince.mapa.paresProvCod
 import com.example.quince.model.Provincias
 import com.example.quince.navcontroller.Rutas
 import com.example.quince.retrofit.ProvinciaViewModel
+import com.example.quince.room.database.AppDatabase
 import com.example.quince.room.database.AppDatabase.Companion.getDatabase
 import com.example.quince.room.dataclasses.Recomendacion
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 
+//Aquí sí se usa viewmodel y debería usar también la base de datos interna.
 
 @Composable
 fun Segunda(
     navController: NavController,
-    viewModel: ProvinciaViewModel = viewModel(),
+    viewModel: ProvinciaViewModel = viewModel(), //El viewmodel hará que se carguen las provincias y decide cómo se van a mostrar.
     provincia: String) {
 
-    val provinciaData: Provincias? by viewModel.provincias.observeAsState(initial = null)
+    val provinciaData: Provincias? by viewModel.provincias.observeAsState(initial = null) //Esto es para que se carguen las provincias.
+    val db = getDatabase(navController.context)
 
-    LaunchedEffect(provincia) {
+    var recomendacion by remember { mutableStateOf<String?>(null) }
+
+
+    LaunchedEffect(provincia) { //LaunchedEffect se ejecuta cuando cambia el valor de provincia y se usa en general para efectos secundarios.
         viewModel.cargarProvincias(provincia)
+        // Ejecuta la consulta en un hilo en segundo plano.
+        withContext(Dispatchers.IO) { //withContext se usa para cambiar el hilo de ejecución. El Dispathchers.IO es para operaciones de E/S.
+            val comentario = db.daoRecomendacion().getRandomCommentInRange()
+            // Después de obtener los datos, actualiza el estado en el hilo principal
+            withContext(Dispatchers.Main) { //Aquí se cambia el hilo de ejecución a la principal (UI).
+                recomendacion = comentario?.consejos?.decodeUnicodeCompletely()
+            }
+        }
     }
+
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -51,6 +74,11 @@ fun Segunda(
         ) {
             provinciaData?.let {
                 Column {
+                    // Mostrar la recomendación si está disponible
+                    recomendacion?.let { recomendacionText ->
+                        Text("Probando la recomendación de ${it.provincia.NOMBRE_PROVINCIA} que es: ${recomendacionText}")
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text("Provincia: ${it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()}")
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}")
@@ -58,6 +86,7 @@ fun Segunda(
 
                     // Debo hacer un mapOf para que funcione el pasarle código de provincia y que me de estado del cielo
                     //Esto me saca el código de la provincia en concreto:
+
                     val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
                     it.ciudades?.firstOrNull { ciudad ->
                         ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
@@ -95,6 +124,7 @@ fun Segunda(
             } ?: Text("Cargando...")
 
 
+
             // Botón "Ok"
             Button(
                 onClick = {
@@ -111,36 +141,4 @@ fun Segunda(
             }
         }
     }
-}
-
-//Estructura inicial:
-@Composable
-fun SegundaA() {
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text("Segunda pantalla")
-
-            // Botón "Ok"
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-            ) {
-                Text("Ok")
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SegundaPreview() {
-    SegundaA()
 }

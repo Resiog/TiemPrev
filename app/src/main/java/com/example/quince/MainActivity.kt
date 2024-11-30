@@ -32,15 +32,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.quince.navcontroller.AppNavHost
 import com.example.quince.room.database.AppDatabase
 import com.example.quince.ui.theme.QuinceTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            val users = AppDatabase.getDatabase(applicationContext).daoProvincia().getAll()
-            Log.d("MainActivity", "Users: $users")
-        }
+
+//        lifecycleScope.launch {
+//            withContext(Dispatchers.IO) {
+//                AppDatabase.getDatabase(applicationContext).daoProvincia().getAll()
+//            }
+//        }
         enableEdgeToEdge()
         setContent {
             QuinceTheme {
@@ -50,3 +54,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
