@@ -52,6 +52,8 @@ fun Segunda(
     val db = getDatabase(navController.context)
 
     var recomendacion by remember { mutableStateOf<String?>(null) }
+    //Pruebo a ver si funciona
+    var consejo by remember { mutableStateOf<String?>(null) }
 
     //Son dos LaunchedEffect:
     // -Uno para cuando cambie provincia, o sea, el String que entra y así actualice UI
@@ -88,9 +90,39 @@ fun Segunda(
                 //val descripcion = provinciaData?.today?.p?.decodeUnicodeCompletely()
                 val maxTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.max
                 val minTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.min
-                val recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRange()
-                val consejo = recomendacionProvincia?.consejos ?: "Sin recomendación"
-                val recomendacionId = recomendacionProvincia?.id //Implementar aquí el obtener el ID de la recomendación
+
+                val recomendacionProvincia : Recomendacion?
+                val recomendacionId: Int?
+
+                if (descripcion?.contains("Nuboso", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Nuboso", seleccionamos aleatoriamente entre los ID 3 y 5
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(1, 3)
+                } else if (descripcion?.contains("Cubierto", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(4, 6)
+                } else if (descripcion?.contains("Despejado", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(7, 9)
+                } else if (descripcion?.contains("Nubes", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(10, 12)
+                } else if (descripcion?.contains("Lluvia", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(13, 15)
+                } else if (descripcion?.contains("Soleado", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(16, 18)
+                } else if (descripcion?.contains("Calor", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(19, 21)
+                } else {
+                    // Si no se encuentra ninguna coincidencia, obtenemos un consejo aleatorio de todos los ID
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(22, 29)
+                }
+
+                consejo = recomendacionProvincia?.consejos ?: "Sin recomendación"
+                recomendacionId = recomendacionProvincia?.id // Obtener el ID de la recomendación
+
                 // Creo un objeto Tiempo para insertar
                 val tiempoAVer = Tiempo(
                     provincia = nombre?: "Desconocida",
@@ -98,7 +130,7 @@ fun Segunda(
                     descripcion = descripcion!!,
                     maxTemp = maxTemp!!.toDoubleOrNull() ?: 0.0,
                     minTemp = minTemp!!.toDoubleOrNull() ?: 0.0,
-                    Recomendado = consejo,
+                    Recomendado = consejo!!,
                     consejoId = recomendacionId!!)
 
                 // Inserto en la tabla tiempo todo
@@ -116,7 +148,6 @@ fun Segunda(
     }
 
 
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -128,8 +159,8 @@ fun Segunda(
             provinciaData?.let {
                 Column {
                     // Mostrar la recomendación si está disponible
-                    recomendacion?.let { recomendacionText ->
-                        Text("Probando la recomendación de ${it.provincia.NOMBRE_PROVINCIA} que es: ${recomendacionText}")
+                    consejo?.let { consejoText ->
+                        Text("Probando la recomendación de ${it.provincia.NOMBRE_PROVINCIA} que es: ${consejoText}")
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text("Provincia: ${it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()}")
@@ -177,7 +208,6 @@ fun Segunda(
             } ?: Text("Cargando...")
 
 
-
             // Botón "Ok"
             Button(
                 onClick = {
@@ -190,7 +220,7 @@ fun Segunda(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {
-                Text("Ok")
+                Text("Volver")
             }
         }
     }

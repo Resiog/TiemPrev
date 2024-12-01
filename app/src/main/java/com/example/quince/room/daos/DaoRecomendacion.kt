@@ -14,6 +14,10 @@ interface DaoRecomendacion {
     @Query("SELECT * FROM recomendacion WHERE id BETWEEN 1 AND 8 ORDER BY RANDOM() LIMIT 1") //El limit 1 es para que solo devuelva un valor
     fun getRandomCommentInRange(): Recomendacion?
 
+    //Nueva función para obtener un comentario en un rango determinado de IDs
+    @Query("SELECT * FROM recomendacion WHERE id BETWEEN :startId AND :endId ORDER BY RANDOM() LIMIT 1")
+    fun getRandomCommentInRangeRange(startId: Int, endId: Int): Recomendacion?
+
     // Función para obtener solo el ID de una recomendación
     @Query("SELECT id FROM recomendacion WHERE id = :recomendacionId LIMIT 1")
     suspend fun getIdByRecomendacionId(recomendacionId: Int): Int?
