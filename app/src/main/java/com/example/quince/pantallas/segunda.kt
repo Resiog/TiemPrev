@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +41,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import com.example.quince.room.dataclasses.Provincia
 import com.example.quince.room.dataclasses.Tiempo
 
@@ -149,60 +156,142 @@ fun Segunda(
 
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState(), enabled = true)
+                .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
+
         ) {
             provinciaData?.let {
-                Column {
-                    // Mostrar la recomendación si está disponible
-                    consejo?.let { consejoText ->
-                        Text("Probando la recomendación de ${it.provincia.NOMBRE_PROVINCIA} que es: ${consejoText}")
+                Text(
+                    text = it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely(),
+                    style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 5.dp),
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    //Negrita
+                    text = buildAnnotatedString {
+                        withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                            append("Comunidad Autónoma: ")
+                        }
+                        append(it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely())
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text("Provincia: ${it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()}")
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text("Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}")
-                    Spacer(modifier = Modifier.height(16.dp))
+//                    text = "Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}",
+//                    style = MaterialTheme.typography.bodyMedium,
+//                    textAlign = TextAlign.Center
+                )
+//                Spacer(modifier = Modifier.height(2.dp))
+
+                //Estado del cielo
+                val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
+                it.ciudades?.firstOrNull { ciudad ->
+                    ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
+                }?.let { ciudad ->
+                    // Acceder a la propiedad stateSky.description solo si se encuentra la ciudad
+                    ciudad.stateSky?.description?.let { estadoCielo ->
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                    append("Estado del cielo hoy: ")
+                                }
+                                append(estadoCielo.decodeTildesAVersiAhora())
+                            }
+                        )
+                            //text = "Estado del cielo hoy: ${estadoCielo.decodeTildesAVersiAhora()}")
+                    }
+                }
+//                Spacer(modifier = Modifier.height(2.dp))
+
+                Column {
+                    //Esto lo comento por ahora
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Text("Provincia: ${it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()}")
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Text("Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}")
+//                    Spacer(modifier = Modifier.height(16.dp))
 
                     // Debo hacer un mapOf para que funcione el pasarle código de provincia y que me de estado del cielo
                     //Esto me saca el código de la provincia en concreto:
 
-                    val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
-                    it.ciudades?.firstOrNull { ciudad ->
-                        ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
-                    }?.let { ciudad ->
-                        // Acceder a la propiedad stateSky.description solo si se encuentra la ciudad
-                        ciudad.stateSky?.description?.let { estadoCielo ->
-                            Text("Estado del cielo hoy: ${estadoCielo.decodeTildesAVersiAhora()}")
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
+
                     //Temperaturas
                     it.ciudades?.firstOrNull { ciudad ->
                         ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
                     }?.let { ciudad ->
                         // Acceder a la propiedad TempInfo, max y min solo si se encuentra la ciudad
                         ciudad.temperatures?.max?.let { estadoCielo ->
-                            Text("Temperatura máxima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º")
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                        append("Máximas de:  ")
+                                    }
+                                    append("${estadoCielo.decodeTildesAVersiAhora()}º")
+                                }
+                                //"Temperatura máxima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º"
+                            )
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(5.dp))
                         ciudad.temperatures?.min?.let { estadoCielo ->
-                            Text("Temperatura mínima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º")
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                        append("Mínimas de:  ")
+                                    }
+                                    append("${estadoCielo.decodeTildesAVersiAhora()}º")
+                                }
+                                //"Temperatura mínima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º"
+                            )
                         }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // Mostrar la recomendación si está disponible
+                    consejo?.let { consejoText ->
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                    append("Recomendación:  ")
+                                }
+                                append("${consejoText}")
+                            }
+                            //"Recomendación para hoy: ${consejoText}"
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 //
                     //
                     it.today?.p?.let { tiempo ->
-                        Text("Descripción completa del tiempo de hoy: ${tiempo.decodeTildesAVersiAhora()}")
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                    append("Descripción completa hoy:  ")
+                                }
+                                append("${tiempo.decodeTildesAVersiAhora()}")
+                            }
+                            //"Descripción completa del tiempo de hoy: ${tiempo.decodeTildesAVersiAhora()}"
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     it.tomorrow?.p?.let { tiempo ->
-                        Text("Descripción del tiempo previsto para mañana: ${tiempo.decodeTildesAVersiAhora()}")
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = androidx.compose.ui.text.SpanStyle(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)) {
+                                    append("Descripción completa mañana:  ")
+                                }
+                                append("${tiempo.decodeTildesAVersiAhora()}")
+                            }
+                            //"Descripción del tiempo previsto para mañana: ${tiempo.decodeTildesAVersiAhora()}"
+                        )
                     }
                 }
             } ?: Text("Cargando...")
