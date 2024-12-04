@@ -7,12 +7,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.quince.pantallas.Primera
+import com.example.quince.pantallas.Principal
 import com.example.quince.pantallas.Segunda
 
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Rutas.PrimeraPantalla.ruta) {
+    NavHost(
+        navController = navController,
+        startDestination = Rutas.Principal.ruta
+    ) {
+        //Definir las rutas de la app
+        composable(route = Rutas.Principal.ruta) {
+            Principal(navController = navController)
+        }
         composable(route = Rutas.PrimeraPantalla.ruta) {
             Primera(navController = navController)
         }

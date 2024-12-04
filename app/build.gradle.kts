@@ -42,6 +42,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
     val nav_version = "2.8.0"
     val retrofit_version = "2.9.0"
 
