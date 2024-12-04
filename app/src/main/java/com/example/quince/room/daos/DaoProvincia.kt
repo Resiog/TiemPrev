@@ -20,4 +20,8 @@ interface DaoProvincia {
     // Función para obtener solo el ID de la provincia por su nombre
     @Query("SELECT id FROM provincia WHERE name = :provinciaName LIMIT 1")
     suspend fun getIdByName(provinciaName: String): Int?
+
+    //Sacar las últimas 5 provincias para mostrar en el historial
+    @Query("SELECT * FROM provincia ORDER BY id DESC LIMIT 5")
+    suspend fun getUltimasProvincias(): List<Provincia>
 }

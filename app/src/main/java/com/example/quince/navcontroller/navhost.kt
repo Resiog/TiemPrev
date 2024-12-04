@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.quince.pantallas.Historial
 import com.example.quince.pantallas.Primera
 import com.example.quince.pantallas.Principal
 import com.example.quince.pantallas.Segunda
@@ -33,6 +34,9 @@ fun AppNavHost(navController: NavHostController) {
                 navController = navController,
                 provincia = provincia
             )
+        }
+        composable(route = Rutas.Historial.ruta) {
+            Historial(navController = navController)
         }
     }}
 //En el NavHost indico las pantallas que habrá. Es un contenedor de pantallas y se usa para navegar entre ellas.

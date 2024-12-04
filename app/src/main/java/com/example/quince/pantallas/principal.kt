@@ -75,7 +75,7 @@ fun Principal(
                             Text("Consultar tiempo")
                         }
                         Button(modifier = Modifier.fillMaxWidth(),
-                            onClick = { /* Acción del segundo botón */ }) {
+                            onClick = { navController.navigate("historial") }) {
                             Text("Historial de provincias")
                         }
                         Button(modifier = Modifier.fillMaxWidth(),
