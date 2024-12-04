@@ -39,12 +39,6 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        lifecycleScope.launch {
-//            withContext(Dispatchers.IO) {
-//                AppDatabase.getDatabase(applicationContext).daoProvincia().getAll()
-//            }
-//        }
         enableEdgeToEdge()
         setContent {
             QuinceTheme {

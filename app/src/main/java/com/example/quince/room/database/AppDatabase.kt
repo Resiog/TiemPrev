@@ -39,7 +39,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .fallbackToDestructiveMigration() //Esta línea elimina la base de datos si se actualiza la versión.
+                    .fallbackToDestructiveMigration() //Esto elimina la base de datos si se actualiza la versión.
                     .addCallback(object : RoomDatabase.Callback() { //Esta línea crea un callback que se ejecuta al crear la base de datos.
                         override fun onOpen(db: SupportSQLiteDatabase) { //Esta línea se ejecuta al abrir la base de datos.
                             super.onOpen(db)

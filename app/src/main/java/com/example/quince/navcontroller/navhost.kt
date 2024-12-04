@@ -18,7 +18,7 @@ fun AppNavHost(navController: NavHostController) {
         navController = navController,
         startDestination = Rutas.Principal.ruta
     ) {
-        //Definir las rutas de la app
+        //Defino las rutas de la app
         composable(route = Rutas.Principal.ruta) {
             Principal(navController = navController)
         }

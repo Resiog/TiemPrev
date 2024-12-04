@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 import java.nio.charset.StandardCharsets
 
 fun String.decodeTildesAVersiAhora(): String {
-    // Primero, reemplazamos las secuencias Unicode con sus caracteres correspondientes
+    // Primero, reemplazo las secuencias Unicode con sus caracteres correspondientes
     var result = this
         .replace("\\u00e1", "á")
         .replace("\\u00e9", "é")
@@ -26,13 +26,13 @@ fun String.decodeTildesAVersiAhora(): String {
         .replace("\\u00c3\\u00ba", "ú")
         .replace("\\u00c3\\u00b1", "ñ")
 
-    // Paso 2: Decodificar caracteres mal interpretados (como 'Ã©' -> 'é')
+    // Paso 2: Decodifo caracteres mal interpretados (como 'Ã©' -> 'é')
     result = String(result.toByteArray(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8)
 
-    // Paso 3: Normalizar los caracteres para asegurarse que no haya más problemas de codificación
+    // Paso 3: Normalizo los caracteres para asegurar que no haya problemas de codificación
     result = Normalizer.normalize(result, Normalizer.Form.NFC)
 
-    // Paso 4: Decodificar caracteres como M\u00e1laga y Andaluc\u00eda correctamente
+    // Paso 4: Decodifico caracteres como M\u00e1laga y Andaluc\u00eda ya que me dan problemas
     result = result.replace("\\u00e1", "á")
         .replace("\\u00ed", "í")
         .replace("\\u00e9", "é")
@@ -68,28 +68,26 @@ fun String.decodeTildes(): String {
         "\\u00c3\\u00b1" to "ñ"
     )
 
-    // Primero, reemplaza las secuencias Unicode conocidas
     var result = this
     replacements.forEach { (unicode, replacement) ->
         result = result.replace(unicode, replacement)
     }
 
-    // Luego, normaliza y elimina acentos restantes
     return Normalizer.normalize(result, Normalizer.Form.NFD)
         .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
 }
 
-// Método de extensión para limpiar caracteres Unicode
+// Método de extensión para limpiar caracteres Unicode a ver si ahora sí
 //fun String.cleanUnicode(): String {
 //    return Normalizer.normalize(this, Normalizer.Form.NFC)
 //}
 //Lo comento porque es poco robusto y seguía dando errores.
 
 fun String.decodeUnicodeCompletely(): String {
-    // Primero, normaliza los caracteres
+    // Primero, normalizo los caracteres
     var result = Normalizer.normalize(this, Normalizer.Form.NFC)
 
-    // Decodifica secuencias de escape Unicode explícitas
+    // Decodifico secuencias de escape Unicode explícitas
     val unicodePattern = Pattern.compile("\\\\u([0-9A-Fa-f]{4})")
     val matcher = unicodePattern.matcher(result)
     val buffer = StringBuffer()
@@ -102,7 +100,7 @@ fun String.decodeUnicodeCompletely(): String {
 
     result = buffer.toString()
 
-    // Limpia cualquier otra secuencia de escape Unicode restante
+    // Limpio cualquier otra secuencia de escape Unicode restante
     result = result.replace("\\\\u[0-9A-Fa-f]{4}".toRegex(), "")
 
     return result

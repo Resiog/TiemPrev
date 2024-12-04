@@ -99,7 +99,6 @@ fun Primera(
                 }
             }
 
-            // Botón "Ok"
             Button(
                 onClick = {
                     val provinciaValue = mapeadoProvincias[selectedText]
@@ -177,9 +176,9 @@ fun PrimeraPreview(
                 }
             }
 
-            // Botón "Ok"
             Button(
                 onClick = {
+                    //Lo comento para que me salga en el preview
 //                    val provinciaValue = mapeadoProvincias[selectedText]
 //                    if (provinciaValue != null) {
 //                        navController.navigate("segundaPantalla/$provinciaValue")

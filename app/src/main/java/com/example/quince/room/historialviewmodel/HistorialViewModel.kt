@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class HistorialViewModel (application: Application) : AndroidViewModel(application) {
     private val provinciaDao = getDatabase(application).daoProvincia()
 
-    // Esta variable almacenará las provincias de la base de datos
+    // Esta variable almacena las provincias de la base de datos
     private val _provinciaList = MutableStateFlow<List<Provincia>>(emptyList())
     val provinciaList: StateFlow<List<Provincia>> = _provinciaList
 

@@ -52,7 +52,7 @@ import com.example.quince.room.dataclasses.Tiempo
 @Composable
 fun Segunda(
     navController: NavController,
-    viewModel: ProvinciaViewModel = viewModel(), //El viewmodel hará que se carguen las provincias y decide cómo se van a mostrar.
+    viewModel: ProvinciaViewModel = viewModel(), //El viewmodel hace que se carguen las provincias y decide cómo se van a mostrar.
     provincia: String) {
 
     val provinciaData: Provincias? by viewModel.provincias.observeAsState(initial = null) //Esto es para que se carguen las provincias.
@@ -94,7 +94,7 @@ fun Segunda(
                 val nombre = provinciaData?.provincia?.NOMBRE_PROVINCIA
                 val nombreId = db.daoProvincia().getIdByName(nombre.toString())//Implementar aquí que el Id (como es FK) sea igual al ID de la tabla provincias que ponga
                 val descripcion = provinciaData?.ciudades?.firstOrNull()?.stateSky?.description
-                //val descripcion = provinciaData?.today?.p?.decodeUnicodeCompletely()
+
                 val maxTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.max
                 val minTemp = provinciaData?.ciudades?.firstOrNull()?.temperatures?.min
 
@@ -102,28 +102,22 @@ fun Segunda(
                 val recomendacionId: Int?
 
                 if (descripcion?.contains("Nuboso", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Nuboso", seleccionamos aleatoriamente entre los ID 3 y 5
+                    // Si la descripción contiene "Nuboso", selecciona aleatoriamente entre los ID 3 y 5 y así con los demás sucesivamente
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(1, 3)
                 } else if (descripcion?.contains("Cubierto", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(4, 6)
                 } else if (descripcion?.contains("Despejado", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(7, 9)
                 } else if (descripcion?.contains("Nubes", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(10, 12)
                 } else if (descripcion?.contains("Lluvia", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(13, 15)
                 } else if (descripcion?.contains("Soleado", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(16, 18)
                 } else if (descripcion?.contains("Calor", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Lluvioso", seleccionamos aleatoriamente entre los ID 6 y 8
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(19, 21)
                 } else {
-                    // Si no se encuentra ninguna coincidencia, obtenemos un consejo aleatorio de todos los ID
+                    // Si no se encuentra ninguna coincidencia, se obtiene un consejo aleatorio de todos los ID
                     recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(22, 29)
                 }
 
@@ -147,7 +141,6 @@ fun Segunda(
                 } catch (e: Exception) {
                     Log.e("Tiempo inserción", "Error al insertar la provincia: ${e.message}")
                 }
-                //Fin de meter aquí ese segundo
             }
         } else {
             Log.d("ProvinciaInsercion", "El nombre de la provincia es nulo o vacío.")
@@ -187,18 +180,14 @@ fun Segunda(
                         }
                         append(it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely())
                     }
-//                    text = "Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}",
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    textAlign = TextAlign.Center
                 )
-//                Spacer(modifier = Modifier.height(2.dp))
 
                 //Estado del cielo
                 val provinciaCodigos = paresProvCod[it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()]
                 it.ciudades?.firstOrNull { ciudad ->
-                    ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
+                    ciudad.id == provinciaCodigos  // Esto filtra la ciudad que coincida con el id de la provincia
                 }?.let { ciudad ->
-                    // Acceder a la propiedad stateSky.description solo si se encuentra la ciudad
+                    // Accede a la propiedad stateSky.description solo si se encuentra la ciudad
                     ciudad.stateSky?.description?.let { estadoCielo ->
                         Text(
                             text = buildAnnotatedString {
@@ -208,28 +197,15 @@ fun Segunda(
                                 append(estadoCielo.decodeTildesAVersiAhora())
                             }
                         )
-                            //text = "Estado del cielo hoy: ${estadoCielo.decodeTildesAVersiAhora()}")
                     }
                 }
-//                Spacer(modifier = Modifier.height(2.dp))
 
                 Column {
-                    //Esto lo comento por ahora
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Text("Provincia: ${it.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()}")
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Text("Comunidad Autónoma: ${it.provincia.COMUNIDAD_CIUDAD_AUTONOMA.decodeUnicodeCompletely()}")
-//                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Debo hacer un mapOf para que funcione el pasarle código de provincia y que me de estado del cielo
-                    //Esto me saca el código de la provincia en concreto:
-
-
                     //Temperaturas
                     it.ciudades?.firstOrNull { ciudad ->
                         ciudad.id == provinciaCodigos  // Filtra la ciudad que coincida con el id de la provincia
                     }?.let { ciudad ->
-                        // Acceder a la propiedad TempInfo, max y min solo si se encuentra la ciudad
+                        // Accede a la propiedad TempInfo, max y min solo si se encuentra la ciudad
                         ciudad.temperatures?.max?.let { estadoCielo ->
                             Text(
                                 text = buildAnnotatedString {
@@ -238,7 +214,6 @@ fun Segunda(
                                     }
                                     append("${estadoCielo.decodeTildesAVersiAhora()}º")
                                 }
-                                //"Temperatura máxima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º"
                             )
                         }
                         Spacer(modifier = Modifier.height(5.dp))
@@ -250,12 +225,11 @@ fun Segunda(
                                     }
                                     append("${estadoCielo.decodeTildesAVersiAhora()}º")
                                 }
-                                //"Temperatura mínima prevista de ${estadoCielo.decodeTildesAVersiAhora()}º"
                             )
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    // Mostrar la recomendación si está disponible
+                    // Muestra la recomendación si está disponible
                     consejo?.let { consejoText ->
                         Text(
                             text = buildAnnotatedString {
@@ -264,12 +238,9 @@ fun Segunda(
                                 }
                                 append("${consejoText}")
                             }
-                            //"Recomendación para hoy: ${consejoText}"
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-//
-                    //
                     it.today?.p?.let { tiempo ->
                         Text(
                             text = buildAnnotatedString {
@@ -278,7 +249,6 @@ fun Segunda(
                                 }
                                 append("${tiempo.decodeTildesAVersiAhora()}")
                             }
-                            //"Descripción completa del tiempo de hoy: ${tiempo.decodeTildesAVersiAhora()}"
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -290,14 +260,11 @@ fun Segunda(
                                 }
                                 append("${tiempo.decodeTildesAVersiAhora()}")
                             }
-                            //"Descripción del tiempo previsto para mañana: ${tiempo.decodeTildesAVersiAhora()}"
                         )
                     }
                 }
             } ?: Text("Cargando...")
 
-
-            // Botón "Ok"
             Button(
                 onClick = {
                     navController.navigate(Rutas.PrimeraPantalla.ruta){

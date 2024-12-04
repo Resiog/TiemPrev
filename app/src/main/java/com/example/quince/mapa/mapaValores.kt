@@ -1,12 +1,5 @@
 package com.example.quince.mapa
 
-//val mapeadoProvincias = mapOf(
-//    "Alicante" to 1, "Valencia" to 30, "Castellón" to 2, "Madrid" to 3,
-//    "Barcelona" to 4, "Sevilla" to 5, "Málaga" to 29, "Bilbao" to 6,
-//    "Zaragoza" to 7, "Murcia" to 30, "Granada" to 9, "Cádiz" to 10,
-//    "Córdoba" to 11, "Valladolid" to 12, "Vigo" to 13, "Gijón" to 14
-//)
-
 val mapeadoProvincias = mapOf(
     "A Coruña" to "15", "Alicante" to "03", "Albacete" to "02", "Almería" to "04",
     "Álava" to "01", "Asturias" to "33", "Ávila" to "05", "Badajoz" to "06",
