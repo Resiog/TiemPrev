@@ -101,24 +101,24 @@ fun Segunda(
                 val recomendacionProvincia : Recomendacion?
                 val recomendacionId: Int?
 
-                if (descripcion?.contains("Nuboso", ignoreCase = true) == true) {
-                    // Si la descripción contiene "Nuboso", selecciona aleatoriamente entre los ID 3 y 5 y así con los demás sucesivamente
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(1, 3)
-                } else if (descripcion?.contains("Cubierto", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(4, 6)
+                if (descripcion?.contains("Cubierto", ignoreCase = true) == true) {
+                    // Si la descripción contiene "Cubierto", selecciona aleatoriamente entre los ID 3 y 5 y así con los demás sucesivamente
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(1, 10)
                 } else if (descripcion?.contains("Despejado", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(7, 9)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(11, 20)
                 } else if (descripcion?.contains("Nubes", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(10, 12)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(21, 30)
                 } else if (descripcion?.contains("Lluvia", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(13, 15)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(31, 40)
                 } else if (descripcion?.contains("Soleado", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(16, 18)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(41, 50)
                 } else if (descripcion?.contains("Calor", ignoreCase = true) == true) {
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(19, 21)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(51, 60)
+                } else if (descripcion?.contains("Nuboso", ignoreCase = true) == true) {
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(61, 70)
                 } else {
                     // Si no se encuentra ninguna coincidencia, se obtiene un consejo aleatorio de todos los ID
-                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(22, 29)
+                    recomendacionProvincia = db.daoRecomendacion().getRandomCommentInRangeRange(71, 80)
                 }
 
                 consejo = recomendacionProvincia?.consejos ?: "Sin recomendación"
