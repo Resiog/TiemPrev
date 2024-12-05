@@ -58,7 +58,7 @@ fun Historial(
                 .weight(2f),
                 verticalAlignment = Alignment.CenterVertically)
             {
-                Text("Últimas provincias consultadas",
+                Text("Registro de provincias consultadas",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -77,7 +77,7 @@ fun Historial(
                                     .padding(vertical = 5.dp)
                                     .padding(10.dp)
                             ) {
-                                Text("Provincia: ",
+                                Text("Consultada: ",
                                     style = MaterialTheme.typography.displayLarge,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.primary,
