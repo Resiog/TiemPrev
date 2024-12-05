@@ -11,7 +11,6 @@ import com.example.quince.pantallas.Primera
 import com.example.quince.pantallas.Principal
 import com.example.quince.pantallas.Segunda
 
-
 @Composable
 fun AppNavHost(navController: NavHostController) {
     NavHost(
