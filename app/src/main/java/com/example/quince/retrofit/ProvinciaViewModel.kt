@@ -6,22 +6,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quince.model.Provincias
+import com.example.quince.model.ResultWrapper // Import the new wrapper
 import com.example.quince.room.database.AppDatabase
 import com.example.quince.room.database.AppDatabase.Companion.getDatabase
 import com.example.quince.room.dataclasses.Recomendacion
 import kotlinx.coroutines.launch
 
 class ProvinciaViewModel : ViewModel() { //El viewmodel decide la lógica de visualización de los datos.
-    private val _provincias = MutableLiveData<Provincias>() //Aquí se almacena la información de las provincias.
-    val provincias: LiveData<Provincias> = _provincias //Esto convierte el MutableLiveData en un LiveData
+    private val _provincias = MutableLiveData<ResultWrapper<Provincias>>() //Aquí se almacena la información de las provincias. // Changed type
+    val provincias: LiveData<ResultWrapper<Provincias>> = _provincias //Esto convierte el MutableLiveData en un LiveData // Changed type
 
     fun cargarProvincias(idProvincia: String) {
+        _provincias.value = ResultWrapper.Loading // Set Loading state before launch
         viewModelScope.launch {
             try {
-                val provincias = clienteRetrofit.apiService.getProvincias(idProvincia)
-                _provincias.value = provincias
+                val provinciasData = clienteRetrofit.apiService.getProvincias(idProvincia)
+                _provincias.value = ResultWrapper.Success(provinciasData) // Set Success state
             } catch (e: Exception) {
-                Log.e("ProvinciaViewModel", "Error cargando provincias", e)
+                Log.e("ProvinciaViewModel", "Error cargando provincias para id: $idProvincia", e) // Updated Log
+                _provincias.value = ResultWrapper.Error(e, "No se pudieron cargar los datos de la provincia (ID: $idProvincia). Verifique su conexión o inténtelo más tarde.") // Set Error state
             }
         }
     }
