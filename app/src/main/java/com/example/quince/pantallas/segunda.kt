@@ -168,7 +168,7 @@ fun Segunda(
                         .fillMaxHeight()
                         .padding(vertical = 16.dp), // Add some vertical padding
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
                         text = successData.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely(),
@@ -233,7 +233,7 @@ fun Segunda(
                     }
 
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     // Muestra la recomendación si está disponible
                     consejo?.let { consejoText ->
                         Text(
@@ -245,7 +245,7 @@ fun Segunda(
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     successData.today?.p?.let { tiempo ->
                         Text(
                             text = buildAnnotatedString {
@@ -256,7 +256,7 @@ fun Segunda(
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     successData.tomorrow?.p?.let { tiempo ->
                         Text(
                             text = buildAnnotatedString {
@@ -267,7 +267,7 @@ fun Segunda(
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp)) // Added spacer before button
+                    Spacer(modifier = Modifier.height(8.dp)) // Added spacer before button
                     Button(
                         onClick = { navController.popBackStack() }, // Simpler navigation
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -287,7 +287,7 @@ fun Segunda(
                     result.exception.localizedMessage?.let {
                         Text("Detalles: $it", style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 8.dp))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = { navController.popBackStack() }) {
                         Text("Volver")
                     }
