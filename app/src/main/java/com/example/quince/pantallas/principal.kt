@@ -45,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.animation.core.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
@@ -56,10 +58,10 @@ import androidx.navigation.NavController
 import com.example.quince.mapa.mapeadoProvincias
 
 // Definimos los colores que usaremos. Puedes ajustarlos o definirlos en tu Theme.
-val gradientStartColor = Color(0xFFEDE7F6) // Lila muy claro (Ejemplo)
-val gradientEndColor = Color(0xFFD1C4E9)   // Lila un poco más oscuro (Ejemplo)
-val titleTextColor = Color(0xFF4A148C)     // Morado oscuro para el título (Ejemplo)
-val buttonBackgroundColor = Color(0xFF7E57C2) // Morado medio para botones (Ejemplo)
+val gradientStartColor = Color(0xFFFFFFFF) // Blanco
+val gradientEndColor = Color(0xFF2196F3)   // Azul
+val titleTextColor = Color(0xFF0D47A1)     // Azul oscuro para el título
+val buttonBackgroundColor = Color(0xFF1976D2) // Azul medio para botones
 val buttonContentColor = Color.White       // Texto e iconos de botones en blanco
 
 fun Color.lighten(fraction: Float = 0.2f): Color = lerp(this, Color.White, fraction)
@@ -73,14 +75,25 @@ fun Principal(
 ) {
     val context = LocalContext.current // Para poder cerrar la actividad
 
+    val infiniteTransition = rememberInfiniteTransition()
+    val offset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 800f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 10000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    val animatedBrush = Brush.verticalGradient(
+        colors = listOf(gradientStartColor, gradientEndColor),
+        startY = offset,
+        endY = offset + 800f
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(gradientStartColor, gradientEndColor)
-                )
-            ),
+            .background(animatedBrush),
         // contentAlignment = Alignment.Center // El Column interno ya se encarga
     ) {
         Column(
