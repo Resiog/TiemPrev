@@ -5,4 +5,5 @@ sealed class Rutas (val ruta : String){
     object SegundaPantalla : Rutas("segunda")
     object Principal: Rutas ("principal")
     object Historial: Rutas ("historial")
+    object DetalleHistorial: Rutas("detalleHistorial")
 }

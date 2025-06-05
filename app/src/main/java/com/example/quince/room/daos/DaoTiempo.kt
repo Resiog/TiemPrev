@@ -17,6 +17,10 @@ interface DaoTiempo {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTiempo(tiempo: Tiempo)
 
+    // Obtiene el registro de tiempo asociado a una provincia concreta
+    @Query("SELECT * FROM tiempo WHERE provinciaId = :provinciaId LIMIT 1")
+    suspend fun getTiempoByProvinciaId(provinciaId: Int): Tiempo?
+
 
     @Transaction
     suspend fun insertarRecomendaciónRango(

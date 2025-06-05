@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -50,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.quince.room.dataclasses.Provincia
 import com.example.quince.room.historialviewmodel.HistorialViewModel
+import com.example.quince.navcontroller.Rutas
 
 
 //Gemini
@@ -100,7 +102,9 @@ fun Historial(
                     contentPadding = PaddingValues(bottom = 16.dp) // Espacio para que el último item no pegue con el botón
                 ) {
                     items(provincias, key = { provincia -> provincia.id }) { provincia -> // Usa un 'key' si tus provincias tienen ID único
-                        HistoryItemCard(provincia = provincia)
+                        HistoryItemCard(provincia = provincia) {
+                            navController.navigate("${Rutas.DetalleHistorial.ruta}/${provincia.id}")
+                        }
                     }
                 }
             }
@@ -116,11 +120,12 @@ fun Historial(
 }
 
 @Composable
-fun HistoryItemCard(provincia: Provincia) {
+fun HistoryItemCard(provincia: Provincia, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 70.dp), // Altura mínima para la tarjeta
+            .heightIn(min = 70.dp) // Altura mínima para la tarjeta
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)

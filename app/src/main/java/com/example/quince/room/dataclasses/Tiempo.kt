@@ -36,5 +36,7 @@ data class Tiempo(
     @ColumnInfo(name = "recomendado")
     val Recomendado: String,
     @ColumnInfo(name = "consejoId")
-    val consejoId: Int
+    val consejoId: Int,
+    @ColumnInfo(name = "dataJson")
+    val dataJson: String
 )
