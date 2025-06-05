@@ -23,6 +23,9 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -43,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +61,9 @@ val gradientEndColor = Color(0xFFD1C4E9)   // Lila un poco más oscuro (Ejemplo)
 val titleTextColor = Color(0xFF4A148C)     // Morado oscuro para el título (Ejemplo)
 val buttonBackgroundColor = Color(0xFF7E57C2) // Morado medio para botones (Ejemplo)
 val buttonContentColor = Color.White       // Texto e iconos de botones en blanco
+
+fun Color.lighten(fraction: Float = 0.2f): Color = lerp(this, Color.White, fraction)
+fun Color.darken(fraction: Float = 0.2f): Color = lerp(this, Color.Black, fraction)
 
 //A partir de aquí son cambios dados por Gemini
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,15 +168,27 @@ fun StyledAppButton(
     backgroundColor: Color = buttonBackgroundColor, // Usar el color definido arriba
     contentColor: Color = buttonContentColor   // Usar el color definido arriba
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val animatedColor by animateColorAsState(
+        targetValue = if (pressed) backgroundColor.lighten(0.35f) else backgroundColor,
+        label = "pressColor"
+    )
+    val animatedContentColor by animateColorAsState(
+        targetValue = if (pressed) contentColor.darken(0.35f) else contentColor,
+        label = "pressTextColor"
+    )
+
     Button(
         onClick = onClick,
+        interactionSource = interactionSource,
         modifier = Modifier
             .fillMaxWidth(0.9f) // Ocupa el 90% del ancho disponible
             .height(60.dp),    // Altura del botón aumentada
         shape = RoundedCornerShape(16.dp), // Bordes más redondeados
         colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = contentColor
+            containerColor = animatedColor,
+            contentColor = animatedContentColor
         ),
         elevation = ButtonDefaults.buttonElevation( // Sombra para efecto "elevado"
             defaultElevation = 6.dp,
