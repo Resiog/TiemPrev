@@ -14,7 +14,7 @@ import com.example.quince.room.dataclasses.Tiempo
 
 @Database(
     entities = [Provincia::class, Recomendacion::class, Tiempo::class],
-    version = 7,
+    version = 8,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     // Aquí van las instancias de los DAO que permiten interactuar con las tablas de la base de datos.

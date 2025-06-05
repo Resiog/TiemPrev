@@ -21,6 +21,10 @@ interface DaoProvincia {
     @Query("SELECT id FROM provincia WHERE name = :provinciaName LIMIT 1")
     suspend fun getIdByName(provinciaName: String): Int?
 
+    // Devuelve el id de la última provincia insertada con ese nombre
+    @Query("SELECT id FROM provincia WHERE name = :provinciaName ORDER BY id DESC LIMIT 1")
+    suspend fun getLastIdByName(provinciaName: String): Int?
+
     //Sacar las últimas 5 provincias para mostrar en el historial
     @Query("SELECT * FROM provincia ORDER BY id DESC LIMIT 5")
     suspend fun getUltimasProvincias(): List<Provincia>

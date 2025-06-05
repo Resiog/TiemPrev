@@ -125,7 +125,7 @@ fun Segunda(
                         db.daoProvincia().insertProvincia(provinciaAVerSiAhora)
                     } catch (e: Exception) { /* ... */ }
 
-                    val nombreId = db.daoProvincia().getIdByName(nombreProvincia.decodeUnicodeCompletely())
+                    val nombreId = db.daoProvincia().getLastIdByName(nombreProvincia.decodeUnicodeCompletely())
                     val provinciaNombreDecodedForDb = successData.provincia.NOMBRE_PROVINCIA.decodeUnicodeCompletely()
                     val ciudadIdParaCompararForDb = paresProvCod[provinciaNombreDecodedForDb]
                     val ciudadEncontradaForDb = successData.ciudades?.firstOrNull { ciudad ->
@@ -156,6 +156,7 @@ fun Segunda(
                     }
                     consejo = recomendacionProvincia?.consejos?.decodeUnicodeCompletely() ?: "Sin recomendación disponible."
                     recomendacionId = recomendacionProvincia?.id
+                    val jsonData = com.google.gson.Gson().toJson(successData)
                     val tiempoAVer = Tiempo(
                         provincia = nombreProvincia.decodeUnicodeCompletely(),
                         provinciaId = nombreId ?: -1,
@@ -163,7 +164,8 @@ fun Segunda(
                         maxTemp = maxTemp?.toDoubleOrNull() ?: 0.0,
                         minTemp = minTemp?.toDoubleOrNull() ?: 0.0,
                         Recomendado = consejo ?: "Sin recomendación",
-                        consejoId = recomendacionId ?: -1
+                        consejoId = recomendacionId ?: -1,
+                        dataJson = jsonData
                     )
                     try {
                         db.daoTiempo().insertTiempo(tiempoAVer)
